@@ -59,7 +59,7 @@ All routing lives on the custom PCB. Solder the components and flash the SEEEDUI
 
 ### Matrix
  
-The 6 switches form a 2x3 matrix routed on the PCB. Each switch has a diode (1N4148) in series to prevent ghosting during matrix scan. Diode orientation is fixed by the PCB footprint, so follow the silkscreen (band lines up with the marked pad). This should match your `DIODE_DIRECTION` in QMK (`COL2ROW` is the common default).
+The 6 switches form a 2x3 matrix routed on the PCB. Each switch has a diode (1N4148) in series to prevent ghosting during matrix scan. Diode orientation is fixed by the PCB footprint, so follow the silkscreen (band lines up with the marked pad). This matches `diode_direction` in the QMK config (`COL2ROW`).
  
 ### OLED (I2C)
  
@@ -73,48 +73,100 @@ The EC11 footprint routes the two rotation pins and the push switch to their ass
  
 ## FIRMWARE (QMK)
 
----
-This board runs QMK. To build and flash:
- 
+This board runs QMK. The keyboard definition lives in this repo under
+[`Firmware/keyboards/maestro`](Firmware/keyboards/maestro) and is fully
+data-driven (`keyboard.json`) — there are no separate `<keyboard>.c` / `.h`
+board files to maintain.
+
+Because `maestro` is not part of upstream QMK, you link this repo's keyboard
+folder into your local QMK checkout once, then build normally. This keeps a
+single source of truth (this repo) with no file copying.
+
 ### 1. Set up QMK
- 
-If you have not already:
- 
+
+If you haven't already, install QMK and its toolchain:
+
 ```bash
 qmk setup
 ```
- 
-### 2. Add the keyboard files
- 
-Place your keyboard folder inside `qmk_firmware/keyboards/tiny_macropad/` (or wherever you name it). You will need:
- 
-- `config.h` (matrix pins, encoder pins, OLED settings)
-- `<keyboard>.c` / `<keyboard>.h`
-- `keymap.c` (your layout and encoder logic)
-- `rules.mk` (enable `ENCODER_ENABLE = yes` and `OLED_ENABLE = yes`)
-### 3. Key `rules.mk` flags
- 
-```make
-ENCODER_ENABLE = yes
-OLED_ENABLE = yes
-OLED_DRIVER = ssd1306
+
+On **Windows**, run all `qmk` commands inside the **QMK MSYS** terminal that is
+installed with QMK (not PowerShell or CMD).
+
+### 2. Link this keyboard into your QMK tree
+
+Clone this repo, then link `qmk_firmware/keyboards/maestro` to the keyboard
+folder here. Helper scripts are included:
+
+**Windows** (PowerShell — no admin needed, uses a directory junction):
+
+```powershell
+cd Firmware\Link
+.\link-keyboard.ps1                                  # auto-detects ~\qmk_firmware
+# or: .\link-keyboard.ps1 -QmkHome "D:\path\to\qmk_firmware"
 ```
- 
-### 4. Build
- 
+
+**macOS / Linux:**
+
 ```bash
-qmk compile -kb tiny_macropad -km default
+cd Firmware/Link
+./link-keyboard.sh                                   # auto-detects ~/qmk_firmware
+# or: ./link-keyboard.sh /path/to/qmk_firmware
 ```
- 
-### 5. Flash
- 
-Put the XIAO RP2040 into bootloader mode (double-tap reset, or hold BOOT while plugging in), then flash the generated `.uf2` by dragging it onto the RPI-RP2 drive that appears, or run:
- 
+
+<details>
+<summary>Or link it manually</summary>
+
 ```bash
-qmk flash -kb tiny_macropad -km default
+# macOS / Linux
+ln -s "$(pwd)/Firmware/keyboards/maestro" ~/qmk_firmware/keyboards/maestro
 ```
- 
- 
+
+```powershell
+# Windows PowerShell
+New-Item -ItemType Junction `
+  -Path "$HOME\qmk_firmware\keyboards\maestro" `
+  -Target "$((Resolve-Path .\Firmware\keyboards\maestro).Path)"
+```
+</details>
+
+### 3. Build
+
+```bash
+qmk compile -kb maestro -km default
+```
+
+The compiled `maestro_default.uf2` is written to the root of your `qmk_firmware`
+folder.
+
+### 4. Flash
+
+Put the XIAO RP2040 into bootloader mode (double-tap reset, or hold BOOT while
+plugging in). It mounts as an `RPI-RP2` drive. Either drag the `.uf2` onto that
+drive, or run:
+
+```bash
+qmk flash -kb maestro -km default
+```
+
+### Enabled features
+
+Configured in
+[`keyboard.json`](Firmware/keyboards/maestro/keyboard.json) and
+[`rules.mk`](Firmware/keyboards/maestro/rules.mk):
+
+- **Rotary encoder** — turn = volume up/down, press = mute
+- **OLED** — 128x32 SSD1306 over I2C
+- **Raw HID** (`RAW_ENABLE`) — lets the companion app stream text to the OLED
+- **NKRO**, **extrakeys** (media keys), and **bootmagic**
+
+> **Editor note:** if VS Code shows red squiggles in `keymap.c`
+> (`uint16_t is undefined`, `expected a file name` on `#include QMK_KEYBOARD_H`,
+> etc.), those are IntelliSense errors, not compile errors — the editor can't
+> resolve QMK's macros/includes. They do not affect `qmk compile`. Running
+> `qmk generate-compilation-database -kb maestro -km default` produces a
+> `compile_commands.json` that clears them up.
+
 ## Example Keymap Ideas
  
 - Copy, paste, undo on the main layer
@@ -125,7 +177,6 @@ qmk flash -kb tiny_macropad -km default
 - Discord mute/deafen
 Because it runs QMK, you can add tap-dance, hold-tap, and multiple layers to get far more than 6 functions out of 6 keys.
  
-
  
 ## OLED Display
  
@@ -139,12 +190,12 @@ Keep in mind the 128x32 resolution is small, so stick to short text or compact b
 
 ## OLED Companion App
 
-OLED Display cant fetch data itself (keyboard has no internet). A Small external companion app runs on the host computer, reads current Spotify track, pushes to pad over raw HID through app.
+OLED Display cant fetch data itself (keyboard has no internet). A Small external companion app runs on the host computer, reads current Spotify track, pushes to pad over raw HID through app. See [`Firmware/companion`](Firmware/companion).
 
 - Spotify playing: OLED shows song and artist.
 - Spotify idle: OLED shows current time and date.
 
-Firmware just displays what app sends. Packet format: byte 0 = line number (0 or 1), rest = text string.
+Firmware just displays what app sends. Packet format: byte 0 = line number (0-3), rest = text string.
 
 Requires `RAW_ENABLE = yes` in `rules.mk`.
  
@@ -174,7 +225,7 @@ Print in any filament and color. PLA fine for desk device.
  
 ## Notes
  
-- Match your matrix and encoder pins in `config.h` to the PCB routing before flashing.
+- Match your matrix and encoder pins in `keyboard.json` / `config.h` to the PCB routing before flashing.
 - If the OLED does not light up, confirm the I2C address (usually `0x3C`) and the header orientation.
 - If keys ghost or repeat, check diode placement and matrix definitions.
 

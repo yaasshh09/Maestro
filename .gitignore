@@ -1,0 +1,21 @@
+# Python (companion app)
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# PyInstaller build output (build your own; don't commit binaries)
+build/
+dist/
+*.spec
+*.exe
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# QMK build artifacts
+*.uf2
+*.bin
+*.hex
+*.elf
