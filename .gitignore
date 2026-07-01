@@ -19,3 +19,6 @@ dist/
 *.bin
 *.hex
 *.elf
+
+# ...but keep the released firmware for the submission
+!/firmware.uf2
