@@ -1,0 +1,16 @@
+﻿pos_x,pos_y,rotation,side,designator,mpn,pack,footprint,value,mount_type
+77.1705,-64.93915,-90.0,top,D1,,,D_DO-35_SOD27_P7.62mm_Horizontal,1N4148,tht
+81.53175,-64.93915,-90.0,top,D2,,,D_DO-35_SOD27_P7.62mm_Horizontal,1N4148,tht
+85.60175,-64.93915,-90.0,top,D3,,,D_DO-35_SOD27_P7.62mm_Horizontal,1N4148,tht
+89.67175,-64.93915,-90.0,top,D4,,,D_DO-35_SOD27_P7.62mm_Horizontal,1N4148,tht
+94.0555,-64.93915,-90.0,top,D5,,,D_DO-35_SOD27_P7.62mm_Horizontal,1N4148,tht
+98.1255,-64.93915,-90.0,top,D6,,,D_DO-35_SOD27_P7.62mm_Horizontal,1N4148,tht
+117.475,-89.027,0.0,top,SW1,,,MX-Solderable-1U,SW_Push,tht
+117.475,-108.077,0.0,top,SW2,,,MX-Solderable-1U,SW_Push,tht
+136.525,-89.027,0.0,top,SW3,,,MX-Solderable-1U,SW_Push,tht
+136.525,-108.077,0.0,top,SW4,,,MX-Solderable-1U,SW_Push,tht
+155.575,-89.027,0.0,top,SW5,,,MX-Solderable-1U,SW_Push,tht
+155.575,-108.077,0.0,top,SW6,,,MX-Solderable-1U,SW_Push,tht
+150.805625,-66.461,0.0,top,SW7,,,RotaryEncoder_Alps_EC11E-Switch_Vertical_H20mm,RotaryEncoder_Switch,tht
+85.803,-50.97653,0.0,top,U1,,,XIAO-Generic-Hybrid-14P-2.54-21X17.8MM,MOUDLE-SEEEDUINO-XIAO,smt
+109.567625,-72.771,90.0,top,U2,,,ER_OLEDM0.91_1x-I2C,ER_OLEDM0.91_1x-I2C,tht

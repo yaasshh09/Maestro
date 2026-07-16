@@ -1,0 +1,6 @@
+﻿Designator,Quantity,Value,Footprint,Package,MPN,DNP,Mount_Type,Description
+"D1, D2, D3, D4, D5, D6",6,1N4148,D_DO-35_SOD27_P7.62mm_Horizontal,,,,tht,"DO-35 Diode, Small Signal, Fast Switching, 75V, 150mA, 4ns, Alternate KiCad Library"
+"SW1, SW2, SW3, SW4, SW5, SW6",6,SW_Push,MX-Solderable-1U,,,,tht,"Push button switch, generic, two pins"
+SW7,1,RotaryEncoder_Switch,RotaryEncoder_Alps_EC11E-Switch_Vertical_H20mm,,,,tht,"Rotary encoder, dual channel, incremental quadrate outputs, with switch"
+U1,1,MOUDLE-SEEEDUINO-XIAO,XIAO-Generic-Hybrid-14P-2.54-21X17.8MM,,,,smt,
+U2,1,ER_OLEDM0.91_1x-I2C,ER_OLEDM0.91_1x-I2C,,,,tht,"SSD1306 OLED module, 0.91 inch, 128x32, I2C"
