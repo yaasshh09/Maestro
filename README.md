@@ -16,7 +16,9 @@ The whole thing is housed in a 3D printed case designed to hold the PCB, switche
   <img src="Images/PCB_FP.png" alt="PCB_FULL" width="500">
  <img src="Images/PCB_BP.png" alt="PCB_FULL" width="500">
 </p>
-
+<p align="center">
+  <img src="Images/SCH.png" alt="PCB_FULL"> 
+</p>
 ## Features
  
 - 6 mechanical switches wired in a 2x3 matrix
